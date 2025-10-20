@@ -1,0 +1,62 @@
+## Build and publish folders
+bin/
+obj/
+out/
+publish/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider IDE
+.idea/
+
+## Visual Studio Code
+.vscode/
+
+## ASP.NET Secrets (if used)
+secrets.json
+
+## Logs
+*.log
+logs/
+*.nlog
+
+## Entity Framework Migrations snapshots
+Migrations/*Snapshot.cs
+
+## dotnet environment files
+.env
+*.env
+
+## Auto-generated files
+*.generated.cs
+*.g.cs
+*.Designer.cs
+
+## MacOS
+.DS_Store
+
+## Windows
+Thumbs.db
+desktop.ini
+
+## npm/node_modules (if using frontend assets)
+node_modules/
+dist/
+
+## Test results
+TestResults/
+coverage/
+
+## JetBrains Rider
+*.DotSettings.user
+.idea/
+
+## Other temp
+~$*
+*.tmp
+*.bak
+*.swp
