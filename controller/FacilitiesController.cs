@@ -24,7 +24,7 @@ public class FacilitiesController : ControllerBase
             .Facilities
             .AsNoTracking()
             .OrderBy(f => f.Name)
-            .Select(f => new FacilitySummaryDto(f.Id, f.Name, f.Code, f.Address, f.Timezone))
+            .Select(f => new FacilitySummaryDto(f.Id, f.Name, f.Code, f.Address))
             .ToListAsync(cancellationToken);
 
         return Ok(facilities);
@@ -37,7 +37,7 @@ public class FacilitiesController : ControllerBase
             .Facilities
             .AsNoTracking()
             .Where(f => f.Id == id)
-            .Select(f => new FacilitySummaryDto(f.Id, f.Name, f.Code, f.Address, f.Timezone))
+            .Select(f => new FacilitySummaryDto(f.Id, f.Name, f.Code, f.Address))
             .SingleOrDefaultAsync(cancellationToken);
 
         if (facility is null)
@@ -59,13 +59,12 @@ public class FacilitiesController : ControllerBase
             Name = dto.Name,
             Code = dto.Code,
             Address = dto.Address,
-            Timezone = dto.Timezone,
         };
 
         _dbContext.Facilities.Add(facility);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        var summary = new FacilitySummaryDto(facility.Id, facility.Name, facility.Code, facility.Address, facility.Timezone);
+        var summary = new FacilitySummaryDto(facility.Id, facility.Name, facility.Code, facility.Address);
         return CreatedAtAction(nameof(GetFacility), new { id = facility.Id }, summary);
     }
 }

@@ -16,10 +16,6 @@ public class Facility : BaseEntity
     [MaxLength(200)]
     public string? Address { get; set; }
 
-    [Required]
-    [MaxLength(100)]
-    public string Timezone { get; set; } = "UTC";
-
     public ICollection<Clinic> Clinics { get; set; } = new List<Clinic>();
     public ICollection<Patient> Patients { get; set; } = new List<Patient>();
 }

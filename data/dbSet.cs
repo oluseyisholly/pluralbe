@@ -73,7 +73,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             Name = "Downtown Medical Center",
             Code = "DMC",
             Address = "123 Main St, Springfield",
-            Timezone = "UTC",
             CreatedAt = utcNow,
         };
 
@@ -83,7 +82,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             Name = "Lakeside Family Clinic",
             Code = "LFC",
             Address = "45 Lake View Dr, Springfield",
-            Timezone = "UTC",
             CreatedAt = utcNow,
         };
 
