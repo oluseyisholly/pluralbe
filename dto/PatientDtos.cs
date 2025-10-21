@@ -1,26 +1,54 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClinicManagement.Dtos;
+namespace ClinicManagement.Dtos
+{
+    // ✅ Input DTO: Use class for proper validation and model binding
+    public class PatientCreateDto
+    {
+        [Required]
+        [MaxLength(100)]
+        public string FirstName { get; set; } = string.Empty;
 
-public record PatientCreateDto(
-    [property: Required, MaxLength(100)] string FirstName,
-    [property: MaxLength(100)] string? MiddleName,
-    [property: Required, MaxLength(100)] string LastName,
-    [property: Required, MaxLength(20)] string Gender,
-    [property: Required] DateOnly DateOfBirth,
-    [property: Required, Phone, MaxLength(20)] string PrimaryPhone,
-    [property: EmailAddress, MaxLength(150)] string? Email,
-    [property: MaxLength(250)] string? ContactAddress,
-    [property: Required] int FacilityId
-);
+        [MaxLength(100)]
+        public string? MiddleName { get; set; }
 
-public record PatientSummaryDto(
-    int Id,
-    string FullName,
-    string Gender,
-    DateOnly DateOfBirth,
-    string PrimaryPhone,
-    string? Email,
-    int FacilityId,
-    string FacilityName
-);
+        [Required]
+        [MaxLength(100)]
+        public string LastName { get; set; } = string.Empty;
+
+        [Required]
+        [MaxLength(20)]
+        public string Gender { get; set; } = string.Empty;
+
+        [Required]
+        public DateOnly DateOfBirth { get; set; }
+
+        [Required]
+        [Phone]
+        [MaxLength(20)]
+        public string PrimaryPhone { get; set; } = string.Empty;
+
+        [EmailAddress]
+        [MaxLength(150)]
+        public string? Email { get; set; }
+
+        [MaxLength(250)]
+        public string? ContactAddress { get; set; }
+
+        [Required]
+        public int FacilityId { get; set; }
+    }
+
+    // ✅ Output DTO: Use record for read-only API responses
+    public record PatientSummaryDto(
+        int Id,
+        string FullName,
+        string Gender,
+        DateOnly DateOfBirth,
+        string PrimaryPhone,
+        string? Email,
+        int FacilityId,
+        string FacilityName
+    );
+}

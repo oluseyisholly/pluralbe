@@ -13,7 +13,10 @@ public class AppointmentsController : ControllerBase
     private readonly AppDbContext _dbContext;
     private readonly IAppointmentScheduler _appointmentScheduler;
 
-    public AppointmentsController(AppDbContext dbContext, IAppointmentScheduler appointmentScheduler)
+    public AppointmentsController(
+        AppDbContext dbContext,
+        IAppointmentScheduler appointmentScheduler
+    )
     {
         _dbContext = dbContext;
         _appointmentScheduler = appointmentScheduler;
@@ -28,8 +31,7 @@ public class AppointmentsController : ControllerBase
     )
     {
         var query = _dbContext
-            .Appointments
-            .AsNoTracking()
+            .Appointments.AsNoTracking()
             .Include(a => a.Patient)
             .Include(a => a.Clinic)
             .ThenInclude(c => c.Facility)
@@ -54,48 +56,58 @@ public class AppointmentsController : ControllerBase
         var appointments = await query
             .OrderBy(a => a.AppointmentDate)
             .ThenBy(a => a.StartTime)
-            .Select(
-                a => new AppointmentSummaryDto(
-                    a.Id,
-                    a.AppointmentDate,
-                    a.StartTime,
-                    a.DurationMinutes,
-                    a.Status,
-                    a.Clinic.Name,
-                    a.Clinic.Facility.Name,
-                    a.AppointmentType.Name,
-                    a.Patient.FullName
-                )
-            )
+            .Select(a => new AppointmentSummaryDto
+            {
+                Id = a.Id,
+                AppointmentDate = a.AppointmentDate,
+                StartTime = a.StartTime,
+                DurationMinutes = a.DurationMinutes,
+                Status = a.Status,
+                ClinicName = a.Clinic != null ? a.Clinic.Name : string.Empty,
+                FacilityName =
+                    a.Clinic != null && a.Clinic.Facility != null
+                        ? a.Clinic.Facility.Name
+                        : string.Empty,
+                AppointmentType = a.AppointmentType != null ? a.AppointmentType.Name : string.Empty,
+                AppointmentTypeName =
+                    a.AppointmentType != null ? a.AppointmentType.Name : string.Empty,
+                PatientName = a.Patient != null ? a.Patient.FullName : string.Empty,
+            })
             .ToListAsync(cancellationToken);
 
         return Ok(appointments);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<AppointmentSummaryDto>> GetAppointment(int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<AppointmentSummaryDto>> GetAppointment(
+        int id,
+        CancellationToken cancellationToken
+    )
     {
         var appointment = await _dbContext
-            .Appointments
-            .AsNoTracking()
+            .Appointments.AsNoTracking()
             .Include(a => a.Patient)
             .Include(a => a.Clinic)
             .ThenInclude(c => c.Facility)
             .Include(a => a.AppointmentType)
             .Where(a => a.Id == id)
-            .Select(
-                a => new AppointmentSummaryDto(
-                    a.Id,
-                    a.AppointmentDate,
-                    a.StartTime,
-                    a.DurationMinutes,
-                    a.Status,
-                    a.Clinic.Name,
-                    a.Clinic.Facility.Name,
-                    a.AppointmentType.Name,
-                    a.Patient.FullName
-                )
-            )
+            .Select(a => new AppointmentSummaryDto
+            {
+                Id = a.Id,
+                AppointmentDate = a.AppointmentDate,
+                StartTime = a.StartTime,
+                DurationMinutes = a.DurationMinutes,
+                Status = a.Status,
+                ClinicName = a.Clinic != null ? a.Clinic.Name : string.Empty,
+                FacilityName =
+                    a.Clinic != null && a.Clinic.Facility != null
+                        ? a.Clinic.Facility.Name
+                        : string.Empty,
+                AppointmentType = a.AppointmentType != null ? a.AppointmentType.Name : string.Empty,
+                AppointmentTypeName =
+                    a.AppointmentType != null ? a.AppointmentType.Name : string.Empty,
+                PatientName = a.Patient != null ? a.Patient.FullName : string.Empty,
+            })
             .SingleOrDefaultAsync(cancellationToken);
 
         if (appointment is null)
@@ -108,7 +120,7 @@ public class AppointmentsController : ControllerBase
 
     [HttpPost]
     public async Task<ActionResult<AppointmentSummaryDto>> CreateAppointment(
-        AppointmentCreateDto dto,
+        [FromBody] AppointmentCreateDto dto,
         CancellationToken cancellationToken
     )
     {
@@ -117,26 +129,30 @@ public class AppointmentsController : ControllerBase
             var appointment = await _appointmentScheduler.ScheduleAsync(dto, cancellationToken);
 
             var created = await _dbContext
-                .Appointments
-                .AsNoTracking()
+                .Appointments.AsNoTracking()
                 .Include(a => a.Patient)
                 .Include(a => a.Clinic)
                 .ThenInclude(c => c.Facility)
                 .Include(a => a.AppointmentType)
                 .Where(a => a.Id == appointment.Id)
-                .Select(
-                    a => new AppointmentSummaryDto(
-                        a.Id,
-                        a.AppointmentDate,
-                        a.StartTime,
-                        a.DurationMinutes,
-                        a.Status,
-                        a.Clinic.Name,
-                        a.Clinic.Facility.Name,
-                        a.AppointmentType.Name,
-                        a.Patient.FullName
-                    )
-                )
+                .Select(a => new AppointmentSummaryDto
+                {
+                    Id = a.Id,
+                    AppointmentDate = a.AppointmentDate,
+                    StartTime = a.StartTime,
+                    DurationMinutes = a.DurationMinutes,
+                    Status = a.Status,
+                    ClinicName = a.Clinic != null ? a.Clinic.Name : string.Empty,
+                    FacilityName =
+                        a.Clinic != null && a.Clinic.Facility != null
+                            ? a.Clinic.Facility.Name
+                            : string.Empty,
+                    AppointmentType =
+                        a.AppointmentType != null ? a.AppointmentType.Name : string.Empty,
+                    AppointmentTypeName =
+                        a.AppointmentType != null ? a.AppointmentType.Name : string.Empty,
+                    PatientName = a.Patient != null ? a.Patient.FullName : string.Empty,
+                })
                 .SingleAsync(cancellationToken);
 
             return CreatedAtAction(nameof(GetAppointment), new { id = appointment.Id }, created);
