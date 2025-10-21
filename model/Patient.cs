@@ -23,7 +23,7 @@ public class Patient : BaseEntity
     public string Gender { get; set; } = string.Empty;
 
     [Column(TypeName = "date")]
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 
     [Required]
     [Phone]

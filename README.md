@@ -30,3 +30,7 @@ This project provides a lightweight ASP.NET Core Web API for managing clinic fac
    When running in development the Swagger UI is available at `https://localhost:5001/swagger` (port may vary).
 
 The in-memory database is seeded with sample data for facilities, clinics, appointment types, patients, and an upcoming appointment so you can exercise the endpoints immediately.
+
+## Troubleshooting
+
+- If you previously worked on the ecommerce version of this project, remove the old `Migrations/` folder and clean any cached build outputs before running `dotnet build`. The current in-memory setup does not require those migration classes and the stale files can cause compiler errors about missing namespaces or Npgsql references.

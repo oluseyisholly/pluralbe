@@ -29,6 +29,7 @@ public class AppointmentsController : ControllerBase
     {
         var query = _dbContext
             .Appointments
+            .AsNoTracking()
             .Include(a => a.Patient)
             .Include(a => a.Clinic)
             .ThenInclude(c => c.Facility)
@@ -76,6 +77,10 @@ public class AppointmentsController : ControllerBase
     {
         var appointment = await _dbContext
             .Appointments
+<<<<<<< HEAD
+=======
+            .AsNoTracking()
+>>>>>>> e537d1b281b90efbf59e6df218beba06985d48ac
             .Include(a => a.Patient)
             .Include(a => a.Clinic)
             .ThenInclude(c => c.Facility)
@@ -116,6 +121,10 @@ public class AppointmentsController : ControllerBase
 
             var created = await _dbContext
                 .Appointments
+<<<<<<< HEAD
+=======
+                .AsNoTracking()
+>>>>>>> e537d1b281b90efbf59e6df218beba06985d48ac
                 .Include(a => a.Patient)
                 .Include(a => a.Clinic)
                 .ThenInclude(c => c.Facility)

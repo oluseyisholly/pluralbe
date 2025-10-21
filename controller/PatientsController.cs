@@ -26,6 +26,7 @@ public class PatientsController : ControllerBase
     {
         var query = _dbContext
             .Patients
+            .AsNoTracking()
             .Include(p => p.Facility)
             .AsQueryable();
 
@@ -71,6 +72,10 @@ public class PatientsController : ControllerBase
     {
         var patient = await _dbContext
             .Patients
+<<<<<<< HEAD
+=======
+            .AsNoTracking()
+>>>>>>> e537d1b281b90efbf59e6df218beba06985d48ac
             .Include(p => p.Facility)
             .Where(p => p.Id == id)
             .Select(
@@ -101,7 +106,14 @@ public class PatientsController : ControllerBase
         CancellationToken cancellationToken
     )
     {
+<<<<<<< HEAD
         var facilityExists = await _dbContext.Facilities.AnyAsync(f => f.Id == dto.FacilityId, cancellationToken);
+=======
+        var facilityExists = await _dbContext
+            .Facilities
+            .AsNoTracking()
+            .AnyAsync(f => f.Id == dto.FacilityId, cancellationToken);
+>>>>>>> e537d1b281b90efbf59e6df218beba06985d48ac
 
         if (!facilityExists)
         {
@@ -142,6 +154,10 @@ public class PatientsController : ControllerBase
 
         var facilityName = await _dbContext
             .Facilities
+<<<<<<< HEAD
+=======
+            .AsNoTracking()
+>>>>>>> e537d1b281b90efbf59e6df218beba06985d48ac
             .Where(f => f.Id == patient.FacilityId)
             .Select(f => f.Name)
             .SingleAsync(cancellationToken);

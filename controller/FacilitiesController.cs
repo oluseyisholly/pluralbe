@@ -22,6 +22,7 @@ public class FacilitiesController : ControllerBase
     {
         var facilities = await _dbContext
             .Facilities
+            .AsNoTracking()
             .OrderBy(f => f.Name)
             .Select(f => new FacilitySummaryDto(f.Id, f.Name, f.Code, f.Address, f.Timezone))
             .ToListAsync(cancellationToken);
@@ -34,6 +35,7 @@ public class FacilitiesController : ControllerBase
     {
         var facility = await _dbContext
             .Facilities
+            .AsNoTracking()
             .Where(f => f.Id == id)
             .Select(f => new FacilitySummaryDto(f.Id, f.Name, f.Code, f.Address, f.Timezone))
             .SingleOrDefaultAsync(cancellationToken);

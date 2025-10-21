@@ -24,6 +24,7 @@ public class AppointmentTypesController : ControllerBase
     {
         var types = await _dbContext
             .AppointmentTypes
+            .AsNoTracking()
             .OrderBy(t => t.Name)
             .Select(t => new AppointmentTypeSummaryDto(t.Id, t.Name, t.Description, t.DefaultDurationMinutes))
             .ToListAsync(cancellationToken);
@@ -39,6 +40,7 @@ public class AppointmentTypesController : ControllerBase
     {
         var type = await _dbContext
             .AppointmentTypes
+            .AsNoTracking()
             .Where(t => t.Id == id)
             .Select(t => new AppointmentTypeSummaryDto(t.Id, t.Name, t.Description, t.DefaultDurationMinutes))
             .SingleOrDefaultAsync(cancellationToken);

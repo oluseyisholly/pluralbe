@@ -24,6 +24,7 @@ public class AppointmentScheduler : IAppointmentScheduler
     {
         var clinic = await _dbContext
             .Clinics
+            .AsNoTracking()
             .Include(c => c.Facility)
             .SingleOrDefaultAsync(c => c.Id == dto.ClinicId, cancellationToken);
 
@@ -32,7 +33,14 @@ public class AppointmentScheduler : IAppointmentScheduler
             throw new InvalidOperationException($"Clinic with id {dto.ClinicId} was not found.");
         }
 
+<<<<<<< HEAD
         var patient = await _dbContext.Patients.SingleOrDefaultAsync(p => p.Id == dto.PatientId, cancellationToken);
+=======
+        var patient = await _dbContext
+            .Patients
+            .AsNoTracking()
+            .SingleOrDefaultAsync(p => p.Id == dto.PatientId, cancellationToken);
+>>>>>>> e537d1b281b90efbf59e6df218beba06985d48ac
 
         if (patient is null)
         {
@@ -46,6 +54,10 @@ public class AppointmentScheduler : IAppointmentScheduler
 
         var appointmentType = await _dbContext
             .AppointmentTypes
+<<<<<<< HEAD
+=======
+            .AsNoTracking()
+>>>>>>> e537d1b281b90efbf59e6df218beba06985d48ac
             .SingleOrDefaultAsync(a => a.Id == dto.AppointmentTypeId, cancellationToken);
 
         if (appointmentType is null)
@@ -63,10 +75,20 @@ public class AppointmentScheduler : IAppointmentScheduler
         var startLocalDateTime = dto.AppointmentDate.ToDateTime(dto.StartTime);
         var endLocalDateTime = startLocalDateTime.AddMinutes(duration);
 
+<<<<<<< HEAD
         var conflictingAppointment = await _dbContext
             .Appointments
             .Where(a => a.ClinicId == dto.ClinicId && a.AppointmentDate == dto.AppointmentDate)
             .AsEnumerable()
+=======
+        var sameClinicAppointments = await _dbContext
+            .Appointments
+            .AsNoTracking()
+            .Where(a => a.ClinicId == dto.ClinicId && a.AppointmentDate == dto.AppointmentDate)
+            .ToListAsync(cancellationToken);
+
+        var conflictingAppointment = sameClinicAppointments
+>>>>>>> e537d1b281b90efbf59e6df218beba06985d48ac
             .FirstOrDefault(existing => HasConflict(existing, startLocalDateTime, endLocalDateTime));
 
         if (conflictingAppointment is not null)
