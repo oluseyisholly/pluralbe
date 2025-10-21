@@ -1,5 +1,7 @@
 using ClinicManagement.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClinicManagement.Data;
 
@@ -24,28 +26,38 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     private static void ConfigureDateAndTimeConversions(ModelBuilder modelBuilder)
     {
+        var dateOnlyConverter = new ValueConverter<DateOnly, DateTime>(
+            d => d.ToDateTime(TimeOnly.MinValue),
+            dt => DateOnly.FromDateTime(dt));
+
+        var dateOnlyComparer = new ValueComparer<DateOnly>(
+            (d1, d2) => d1 == d2,
+            d => d.GetHashCode(),
+            d => d);
+
+        var timeOnlyConverter = new ValueConverter<TimeOnly, TimeSpan>(
+            t => t.ToTimeSpan(),
+            ts => TimeOnly.FromTimeSpan(ts));
+
+        var timeOnlyComparer = new ValueComparer<TimeOnly>(
+            (t1, t2) => t1 == t2,
+            t => t.GetHashCode(),
+            t => t);
+
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             foreach (var property in entityType.GetProperties())
             {
                 if (property.ClrType == typeof(DateOnly))
                 {
-                    property.SetValueConverter(new Microsoft.EntityFrameworkCore.Storage.ValueConversion.DateOnlyConverter());
-                    property.SetValueComparer(new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<DateOnly>(
-                        (d1, d2) => d1 == d2,
-                        d => d.GetHashCode(),
-                        d => d
-                    ));
+                    property.SetValueConverter(dateOnlyConverter);
+                    property.SetValueComparer(dateOnlyComparer);
                 }
 
                 if (property.ClrType == typeof(TimeOnly))
                 {
-                    property.SetValueConverter(new Microsoft.EntityFrameworkCore.Storage.ValueConversion.TimeOnlyConverter());
-                    property.SetValueComparer(new Microsoft.EntityFrameworkCore.ChangeTracking.ValueComparer<TimeOnly>(
-                        (t1, t2) => t1 == t2,
-                        t => t.GetHashCode(),
-                        t => t
-                    ));
+                    property.SetValueConverter(timeOnlyConverter);
+                    property.SetValueComparer(timeOnlyComparer);
                 }
             }
         }
