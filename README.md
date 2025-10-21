@@ -33,4 +33,4 @@ The in-memory database is seeded with sample data for facilities, clinics, appoi
 
 ## Troubleshooting
 
-- If you previously worked on the ecommerce version of this project, remove the old `Migrations/` folder and clean any cached build outputs before running `dotnet build`. The current in-memory setup does not require those migration classes and the stale files can cause compiler errors about missing namespaces or Npgsql references.
+- If you previously worked on the ecommerce version of this project, remove the old `Migrations/` folder and clean any cached build outputs before running `dotnet build`. The current in-memory setup does not require those migration classes and the stale files can cause compiler errors about missing namespaces or Npgsql references. The project file now explicitly excludes `Migrations/` from compilation to prevent these legacy files from blocking the build, but deleting them keeps your workspace tidy.
