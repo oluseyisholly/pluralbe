@@ -5,11 +5,10 @@ namespace ClinicManagement.Dtos;
 public record FacilityCreateDto(
     [property: Required, MaxLength(150)] string Name,
     [property: Required, MaxLength(50)] string Code,
-    [property: MaxLength(200)] string? Address,
-    [property: Required, MaxLength(100)] string Timezone
+    [property: MaxLength(200)] string? Address
 );
 
-public record FacilitySummaryDto(int Id, string Name, string Code, string? Address, string Timezone);
+public record FacilitySummaryDto(int Id, string Name, string Code, string? Address);
 
 public record ClinicCreateDto(
     [property: Required, MaxLength(150)] string Name,
